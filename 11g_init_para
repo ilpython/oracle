@@ -9,7 +9,6 @@ alter table sys.aud$ deallocate unused keep 2000m;
 alter table sys.aud$ deallocate unused keep 500m; 
 alter table sys.aud$ deallocate unused keep 250m; 
 alter table sys.aud$ deallocate unused keep 10m; 
-
 --------------
 alter system set processes=3000 scope=spfile; 
 alter system set open_cursors=1000 scope=both ;
@@ -41,16 +40,25 @@ alter system set enable_ddl_logging=true sid='*' scope=spfile;
 alter system set parallel_max_servers=64 sid='*' scope=spfile; 
 alter system set sec_case_sensitive_logon=false sid='*' scope=spfile; 
 alter system set "_b_tree_bitmap_plans"=false sid='*' scope=spfile; 
+alter system set "_bloom_filter_enabled" = false sid='*'scope=spfile;
+alter system set "_gc_read_mostly_locking" = false sid='*'scope=spfile;
+alter system set "_resource_manager_always_off" = true sid='*'scope=spfile;
+alter system set "_resource_manager_always_on" = false sid='*'scope=spfile;
+alter system set "_serial_direct_read" = never sid='*'scope=spfile;
+alter system set "_dbms_sql_security_level" =0 sid='*'scope=spfile;
+alter system set "_bloom_pruning_enabled" = false sid='*'scope=spfile;
+alter database set time_zone='+8:00';
+alter profile default limit FAILED_LOGIN_ATTEMPTS unlimited;
+alter profile default limit PASSWORD_LIFE_TIME unlimited;
+alter profile default limit PASSWORD_REUSE_TIME unlimited;
+alter profile default limit PASSWORD_REUSE_MAX unlimited;
+#alter profile default limit PASSWORD_VERIFY_FUNCTION unlimited;
+alter profile default limit PASSWORD_LOCK_TIME unlimited;
+alter profile default limit PASSWORD_GRACE_TIME unlimited;
+alter system set remote_login_passwordfile=NONE sid='*' scope=spfile;
+alter system set O7_DICTIONARY_ACCESSIBILITY=FALSE sid='*' scope=spfile;
+alter system set "_cleanup_rollback_entries"=1000 scope=spfile sid='*';
+alter system set "_datafile_write_errors_crash_instance"=FALSE scope=spfile sid='*';
 
-alter system set "_bloom_filter_enabled" = false scope=spfile;
-alter system set "_gc_read_mostly_locking" = false scope=spfile;
-alter system set "_resource_manager_always_off" = true scope=spfile;
-alter system set "_resource_manager_always_on" = false scope=spfile;
-alter system set "_serial_direct_read" = never scope=spfile;
-alter system set "_cleanup_rollback_entries" = 400 scope=spfile;
-alter system set "_dbms_sql_security_level" =0 scope=spfile;
-alter system set "_bloom_pruning_enabled" = false scope=spfile;
-
-----
 exec dbms_auto_task_admin.disable(client_name => 'auto space advisor', operation => null, window_name => null); 
 exec dbms_auto_task_admin.disable(client_name => 'sql tuning advisor', operation => null, window_name => null);

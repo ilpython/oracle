@@ -1,0 +1,56 @@
+--清理数据库审计 
+truncate table sys.aud$ reuse storage; 
+alter table sys.aud$ deallocate unused keep 25000m;  
+alter table sys.aud$ deallocate unused keep 20000m; 
+alter table sys.aud$ deallocate unused keep 15000m; 
+alter table sys.aud$ deallocate unused keep 10000m; 
+alter table sys.aud$ deallocate unused keep 5000m; 
+alter table sys.aud$ deallocate unused keep 2000m; 
+alter table sys.aud$ deallocate unused keep 500m; 
+alter table sys.aud$ deallocate unused keep 250m; 
+alter table sys.aud$ deallocate unused keep 10m; 
+
+--------------
+alter system set processes=3000 scope=spfile; 
+alter system set open_cursors=1000 scope=both ;
+alter system set undo_retention=10800 scope=spfile;  
+alter system set audit_trail=none sid='*' scope=spfile; 
+----
+alter profile "DEFAULT" limit PASSWORD_GRACE_TIME UNLIMITED; 
+alter profile "DEFAULT" limit PASSWORD_LIFE_TIME UNLIMITED; 
+alter profile "DEFAULT" limit PASSWORD_LOCK_TIME UNLIMITED; 
+alter profile "DEFAULT" limit FAILED_LOGIN_ATTEMPTS UNLIMITED; 
+alter system set "_clusterwide_global_transactions" = false scope=spfile;
+alter system set parallel_force_local=true sid='*' scope=spfile; 
+alter system set "_gc_policy_time"=0 sid='*' scope=spfile; 
+alter system set "_gc_undo_affinity"=false scope=spfile; 
+alter system set "_optimizer_adaptive_cursor_sharing"=false sid='*' scope=spfile; 
+alter system set "_optimizer_extended_cursor_sharing"=none sid='*' scope=spfile; 
+alter system set "_optimizer_extended_cursor_sharing_rel"=none sid='*' scope=spfile; 
+alter system set "_optimizer_use_feedback"=false sid ='*' scope=spfile; 
+alter system set deferred_segment_creation=false sid='*' scope=spfile; 
+alter system set event='28401 trace name context forever,level 1','10949 trace name context forever,level 1' sid='*' scope=spfile; 
+alter system set "_undo_autotune"=false sid='*' scope=spfile; 
+alter system set "_optimizer_null_aware_antijoin"=false sid ='*' scope=spfile; 
+alter system set "_px_use_large_pool"=true sid ='*' scope=spfile; 
+alter system set "_partition_large_extents"=false sid='*' scope=spfile; 
+alter system set "_index_partition_large_extents"=false sid='*' scope=spfile; 
+alter system set "_use_adaptive_log_file_sync"=false sid='*' scope=spfile; 
+alter system set "_memory_imm_mode_without_autosga"=false sid='*' scope=spfile; 
+alter system set enable_ddl_logging=true sid='*' scope=spfile; 
+alter system set parallel_max_servers=64 sid='*' scope=spfile; 
+alter system set sec_case_sensitive_logon=false sid='*' scope=spfile; 
+alter system set "_b_tree_bitmap_plans"=false sid='*' scope=spfile; 
+
+alter system set "_bloom_filter_enabled" = false scope=spfile;
+alter system set "_gc_read_mostly_locking" = false scope=spfile;
+alter system set "_resource_manager_always_off" = true scope=spfile;
+alter system set "_resource_manager_always_on" = false scope=spfile;
+alter system set "_serial_direct_read" = never scope=spfile;
+alter system set "_cleanup_rollback_entries" = 400 scope=spfile;
+alter system set "_dbms_sql_security_level" =0 scope=spfile;
+alter system set "_bloom_pruning_enabled" = false scope=spfile;
+
+----
+exec dbms_auto_task_admin.disable(client_name => 'auto space advisor', operation => null, window_name => null); 
+exec dbms_auto_task_admin.disable(client_name => 'sql tuning advisor', operation => null, window_name => null);

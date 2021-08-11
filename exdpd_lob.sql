@@ -212,6 +212,8 @@ mv ${imping_file_name} ${imp_done_file_name}
 4.正式导入
 nohup sh impdp_big_tab.sh>impdp_big_tab.sh.out &
 
+for:https://dbaplus.cn/news-10-3199-1.html
+
 ---含有lob字段的大表要评估导出前数据需要的表空间大小。
 SELECT owner,SUM(D.initial_extent)/1024/1024 initial_extent FROM DBA_SEGMENTS D,dba_lobs l where D.SEGMENT_NAME=L.SEGMENT_NAME and D.OWNER='&user' and D.SEGMENT_NAME='&table';
 
